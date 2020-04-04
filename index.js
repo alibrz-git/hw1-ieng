@@ -28,7 +28,7 @@ fs.readFile(`${__dirname}/data.json`, function (err, data) {
 })
 
 app.get('/gis/testpoint', function (req, res, next) {
-	var datetime = "Last Sync: " + currentdate.getDate() + "/"
+	var datetime =  currentdate.getDate() + "/"
 					+ (currentdate.getMonth()+1)  + "/" 
 					+ currentdate.getFullYear() + " @ "  
 					+ currentdate.getHours() + ":"  
@@ -39,6 +39,7 @@ app.get('/gis/testpoint', function (req, res, next) {
     if(!req.query.lat || !req.query.long){
 		logger.error('lat or long is null');
         res.status(400).send("lat and long are required")
+		
     }
     polygons.features.forEach(element => {
         if (isPointInsidePolygon([req.query.long, req.query.lat], element.geometry.coordinates[0])) {
@@ -49,13 +50,13 @@ app.get('/gis/testpoint', function (req, res, next) {
 })
 
 app.put('/gis/addpolygon', function (req, res, next) {
-		var datetime = "Last Sync: " + currentdate.getDate() + "/"
+		var datetime = currentdate.getDate() + "/"
 					+ (currentdate.getMonth()+1)  + "/" 
 					+ currentdate.getFullYear() + " @ "  
 					+ currentdate.getHours() + ":"  
 					+ currentdate.getMinutes() + ":" 
 					+ currentdate.getSeconds();
-	logger.info('get request at' + datetime);
+	logger.info('put request at' + datetime);
     log.debug(`put request to /gis/polygon with req body : ${req.body}`)
     GJV.isFeature(req.body, function (valid, errs) {
         if (!valid) {
