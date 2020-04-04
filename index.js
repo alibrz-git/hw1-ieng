@@ -5,6 +5,12 @@ const bodyParser = require('body-parser')
 const isPointInsidePolygon = require('point-in-polygon')
 var GJV = require("geojson-validation");
 var log = require('debug-logger')('index');
+const winston = require('winston');
+const logger = winston.createLogger({
+    transports: [
+        new winston.transports.Console()
+    ]
+});
 
 
 
@@ -20,6 +26,7 @@ fs.readFile(`${__dirname}/data.json`, function (err, data) {
 app.get('/gis/testpoint', function (req, res, next) {
     let result = { polygons: [] };
     if(!req.query.lat || !req.query.long){
+		logger.error('Its log, log, log');
         res.status(400).send("lat and long are required")
     }
     polygons.features.forEach(element => {
