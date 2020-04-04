@@ -1,12 +1,12 @@
 {
-  "name": "ie1",
+  "name": "hw1-ieng",
   "version": "1.0.0",
-  "description": "",
+  "description": "simple get and put problem",
   "main": "index.js",
   "scripts": {
     "start": "node index.js"
   },
-  "author": "",
+  "author": "abrz",
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.19.0",

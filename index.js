@@ -12,7 +12,7 @@ const logger = winston.createLogger({
     ]
 });
 
-var currentdate = new Date(); 
+var currentdate = Date.now(); 
 
 
 app.use(bodyParser.json())
