@@ -12,6 +12,7 @@ const logger = winston.createLogger({
     ]
 });
 
+var currentdate = new Date(); 
 
 
 app.use(bodyParser.json())
@@ -19,14 +20,24 @@ app.use(bodyParser.json())
 let polygons = {}
 
 fs.readFile(`${__dirname}/data.json`, function (err, data) {
-    if (err) throw err;
+    if (err){
+		logger.error('couldnt read data.json');
+		throw err;
+		}
     polygons = JSON.parse(data.toString())
 })
 
 app.get('/gis/testpoint', function (req, res, next) {
+	var datetime = "Last Sync: " + currentdate.getDate() + "/"
+					+ (currentdate.getMonth()+1)  + "/" 
+					+ currentdate.getFullYear() + " @ "  
+					+ currentdate.getHours() + ":"  
+					+ currentdate.getMinutes() + ":" 
+					+ currentdate.getSeconds();
+	logger.info('get request at' + datetime);
     let result = { polygons: [] };
     if(!req.query.lat || !req.query.long){
-		logger.error('Its log, log, log');
+		logger.error('lat or long is null');
         res.status(400).send("lat and long are required")
     }
     polygons.features.forEach(element => {
@@ -38,15 +49,28 @@ app.get('/gis/testpoint', function (req, res, next) {
 })
 
 app.put('/gis/addpolygon', function (req, res, next) {
+		var datetime = "Last Sync: " + currentdate.getDate() + "/"
+					+ (currentdate.getMonth()+1)  + "/" 
+					+ currentdate.getFullYear() + " @ "  
+					+ currentdate.getHours() + ":"  
+					+ currentdate.getMinutes() + ":" 
+					+ currentdate.getSeconds();
+	logger.info('get request at' + datetime);
     log.debug(`put request to /gis/polygon with req body : ${req.body}`)
     GJV.isFeature(req.body, function (valid, errs) {
         if (!valid) {
+			logger.error('not a valid polygon to put');
             log.debug(`${errs} \nreq body : ${req.body}`)
             res.status(500).send(errs)
         } else {
+			
             polygons.features.push(req.body)
             fs.writeFile(`${__dirname}/data.json`, JSON.stringify(polygons), (err) => {
-                if (err) res.sendStatus(500)
+                if (err){
+					logger.error('error adding polygon to file');
+					res.sendStatus(500)
+					}
+				logger.info('polygon saved');
                 log.debug(`polygon saved successfully : ${req.body}`)
                 res.sendStatus(200)
             })
