@@ -12,7 +12,7 @@ const logger = winston.createLogger({
     ]
 });
 
-var currentdate = Date.now(); 
+ 
 
 
 app.use(bodyParser.json())
@@ -28,6 +28,7 @@ fs.readFile(`${__dirname}/data.json`, function (err, data) {
 })
 
 app.get('/gis/testpoint', function (req, res, next) {
+	let currentdate = new Date();
 	var datetime =  currentdate.getDate() + "/"
 					+ (currentdate.getMonth()+1)  + "/" 
 					+ currentdate.getFullYear() + " @ "  
@@ -50,12 +51,13 @@ app.get('/gis/testpoint', function (req, res, next) {
 })
 
 app.put('/gis/addpolygon', function (req, res, next) {
-		var datetime = currentdate.getDate() + "/"
-					+ (currentdate.getMonth()+1)  + "/" 
-					+ currentdate.getFullYear() + " @ "  
-					+ currentdate.getHours() + ":"  
-					+ currentdate.getMinutes() + ":" 
-					+ currentdate.getSeconds();
+	let currentdate = new Date();
+	var datetime = currentdate.getDate() + "/"
+				+ (currentdate.getMonth()+1)  + "/" 
+				+ currentdate.getFullYear() + " @ "  
+				+ currentdate.getHours() + ":"  
+				+ currentdate.getMinutes() + ":" 
+				+ currentdate.getSeconds();
 	logger.info('put request at' + datetime);
     log.debug(`put request to /gis/polygon with req body : ${req.body}`)
     GJV.isFeature(req.body, function (valid, errs) {
